@@ -111,6 +111,8 @@ function flag(d) {
 
 }
 
+console.log(flags[21].emoji)
+
 for (var i = 1; i < flags.length; i++) {
     // console.log(flags[i].emoji);
 }
