@@ -188,17 +188,16 @@ function createMap() {
     for (var i = 0; i < data.features.length; i++) {
       //   // console.log(data.features[i].properties.pop_est);
         colorPop = data.features[i].properties.pop_est;
-      //   console.log("population is: " + colorPop);
-      // console.log(data.features[i].properties.pop_est);
     }
 
     // Once we get a response, send the data.features object to the createFeatures function
     var countries = L.geoJson(data, {
+      onEachFeature: onEachFeature,
 
       style: function(countries) {
 
         return {
-          // attribution: "XXXXXX 🇦🇴 XXXXXXX",
+          attribution: "XXXXXX 🇦🇴 XXXXXXX",
           color:  "red", // chooseColor(feature.properties.PlateName), // "white", 
           opacity: .8,
           fillColor: getColorCountry(countries.properties.pop_est),
@@ -218,46 +217,114 @@ function createMap() {
                  d > 10000000   ? '#FED976' :
                               '#FFEDA0'
       } 
-      } 
+      },
+      
+
     }); 
-    console.log(data.features[176].properties.name);
-    console.log(data.features[176].properties.pop_est);
-    console.log(data.features.length);
-    console.log(data.features);
-
     
-//     console.dir(countries._layers[39].feature.properties.name);
-//     console.dir(countries._layers[39].feature.properties.pop_est)
-//     console.dir(countries._layers[39].feature.properties.income_grp)
-//     console.dir(countries._layers[39].feature.properties.economy)
-//     console.dir(countries._layers[39].feature.properties.formal_en)
-//     console.dir(countries._layers[39].feature.properties.brk_a3)
-//     console.dir(countries._layers[39].feature.properties.continent)
+    
+// Happens on mouse out
+function reset(e) {
+  countries.resetStyle(e.target);
+  // Resets custom legend when user unhovers
+  displayInfo.update();
+}
 
-//     console.dir(countries._layers)
+//////////////
 
-// var geoKeys = Object.keys(countries);
-// console.log(geoKeys);
+// On hover control that displays information about hovered upon country
+var displayInfo = L.control();
 
-// var object = "";
-//     for (property in countries) {
-//       object += property + ': ' + countries[property]+'; ';
-//   }
-//     console.dir(object);
+displayInfo.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
 
-// var object = countries//put your object here
-// for(var key in object) {
-//     if(object.hasOwnProperty(key)) {
-//         var property = object[key];
-//         console.log(property) //do whatever you want with the property here, for example console.log(property)
-//     }
-// }
+// Passes properties of hovered upon country and displays it in the control
+displayInfo.update = function (props) {
 
-// var object= countries;
-// for(var index in object) { 
-//     console.log(index);
-// }
+    this._div.innerHTML = '<h2>Wealth Countries</h2>' + (props ?
+        '<h3>' + props.formal_en + '</h3>' + '<b>' + 'GDP in Trillions of USD: ' + '</b>' + props.gdp_md_est / 1000000 + '<br />' +
+        '<b>' + ' GDP in Billions of USD: ' + '</b>' + props.gdp_md_est / 1000 + '<br />' +
+        '<b>' + 'Economic Status: ' + '</b>' + props.economy + '<br />' +
+        '<b>' + 'Population: ' + '</b>' + props.pop_est / 1000000 + ' million people' :
+        'Hover over a European country');
+};
 
+// displayInfo.addTo(myMap);
+
+// Happens on mouse hover
+function highlight(e) {
+  onEachFeature: onEachFeature;
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 3,
+        color: '#ffd32a'
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+
+    // Updates custom legend on hover
+    displayInfo.update(layer.feature.properties);
+}
+
+function style(feature) {
+  return {
+      fillColor: getColor(feature.properties.gdp_md_est),
+      weight: 1,
+      opacity: 1,
+      color: 'snow',
+      fillOpacity: .7
+  };
+}
+
+function highlight(e) {
+  var layer = e.target;
+
+  layer.setStyle({
+      weight: 3,
+      color: '#ffd32a',
+  });
+
+  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+      layer.bringToFront();
+  }
+
+  displayInfo.update(layer.feature.properties);
+}
+
+function reset(e) {
+  countries.resetStyle(e.target);
+  displayInfo.update();
+}
+
+    // Create our map, giving it the streetmap and earthquakes layers to display on load
+    var myMap = L.map("map", {
+      worldCopyJump: true,
+      center: [
+        37.09, -70.00
+      ],
+      zoom: 3,
+      layers: [streetmap, countries]  // , earthquakes, earthquakes2015]
+    });
+
+function zoomToCountry(e) {
+  myMap.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+  layer.on({
+      mouseover: highlight,
+      mouseout: reset,
+      click: zoomToCountry
+  });
+}
+
+////////////////////////////////////////////////////////
     
   var link = "TradeWar/data/PB2002_plates.json";
   d3.json(link, function(data) {
@@ -278,8 +345,6 @@ function createMap() {
     }); // .addTo(myMap);
   // console.log(plates);
 
-
-
     // Create overlay object to hold our overlay layer
     var overlayMaps = {
       Countries: countries,
@@ -290,20 +355,23 @@ function createMap() {
     };
   
     // Create our map, giving it the streetmap and earthquakes layers to display on load
-    var myMap = L.map("map", {
-      worldCopyJump: true,
-      center: [
-        37.09, -70.00
-      ],
-      zoom: 3,
-      layers: [streetmap, plates, countries]  // , earthquakes, earthquakes2015]
-    });
+    // var myMap = L.map("map", {
+    //   worldCopyJump: true,
+    //   center: [
+    //     37.09, -70.00
+    //   ],
+    //   zoom: 3,
+    //   layers: [streetmap, plates, countries]  // , earthquakes, earthquakes2015]
+    // });
+
 
     L.control.layers(baseMaps, overlayMaps,  {
       collapsed: false
     }).addTo(myMap);
 
+    displayInfo.addTo(myMap);   //////////////////////////
 
+////////////////////////////////////////////
 ////////// LEGEND /////////////////////////////
     function getColor(d) {
       return d >= 8 ? 'blue' :
@@ -335,12 +403,37 @@ function createMap() {
   
   legend.addTo(myMap);
   
-    
   })
+  
+  
 })
+
 })
+
 })
+
 
   };
 
+
 createMap();
+
+
+
+// var geoKeys = Object.keys(countries);
+// console.log(geoKeys);
+
+    // console.log(data.features[176].properties.name);
+    // console.log(data.features[176].properties.pop_est);
+    // console.log(data.features.length);
+    // console.log(countries._layers[100].options);
+
+//     console.dir(countries._layers[39].feature.properties.name);
+//     console.dir(countries._layers[39].feature.properties.pop_est)
+//     console.dir(countries._layers[39].feature.properties.income_grp)
+//     console.dir(countries._layers[39].feature.properties.economy)
+//     console.dir(countries._layers[39].feature.properties.formal_en)
+//     console.dir(countries._layers[39].feature.properties.brk_a3)
+//     console.dir(countries._layers[39].feature.properties.continent)
+
+//     console.dir(countries._layers)
