@@ -1,12 +1,12 @@
 
 var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-01-01&endtime=" +
 "2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7";
-var query2016 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=" +
-"2016-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
-var query2017 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2017-01-01&endtime=" +
-"2017-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
-var query2018 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-01-01&endtime=" +
-"2018-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
+// var query2016 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=" +
+// "2016-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
+// var query2017 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2017-01-01&endtime=" +
+// "2017-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
+// var query2018 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-01-01&endtime=" +
+// "2018-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
 
 
 // Store our API endpoint inside queryUrl
@@ -64,13 +64,7 @@ function createFeatures(earthquakeData) {
           opacity: 1,
           fillOpacity: 0.5
       };
-        // return new L.circle(latlng, {
-        //   // color: 'red',
-        //   fillColor: '#f03',
-        //   fillOpacity: 0.0,
-        //   radius:  radiusMag,
-        //   color: colorMag
-        // })
+
         return L.circle(latlng, geojsonMarkerOptions )
       }
     })
@@ -129,14 +123,6 @@ function createFeatures2015(earthquakeData2015) {
           fillOpacity: 0.5
       };
 
-    
-        // return new L.circle(latlng, {
-        //   // color: 'red',
-        //   fillColor: '#f03',
-        //   fillOpacity: 0.0,
-        //   radius:  radiusMag,
-        //   color: colorMag
-        // })
         return L.circle(latlng, geojsonMarkerOptions )
       }
     })
@@ -222,7 +208,6 @@ function createMap() {
 
     }); 
     
-    
 // Happens on mouse out
 function reset(e) {
   countries.resetStyle(e.target);
@@ -231,8 +216,36 @@ function reset(e) {
 }
 
 //////////////
+var conflicts = "TradeWar/data/countries_in_conflict.json";
+var conflictZones = [];
+d3.json(conflicts, function(data) {
+  // onEachFeature: onEachFeature,
+  // Once we get a response, send the data.features object to the createFeatures function
+  // createFeatures(data.features);
+  // console.log(data);
+  // console.dir(countries._layers[39].feature.properties.name);
+  // console.dir(data[0].country);
+  conflictZones = data.map(data => data.country);
+  conflictNames = data.map(data => data);
+  // conflictZones = conflictZones.toString();
+  // conflictZones = data[0].country;
+  // return conflictZones;
+  console.log(conflictNames[0].country);
+  console.log(data[0].country);
+  console.log(conflictZones.includes('Canada') ? 'YES' : 'NO');
+  // console.log((conflictZones.indexOf('Canada') ) ? 'On' : 'Off') 
+  console.log(conflictNames[1]['name_of_conflict']);
+  // console.log(props.name === "Mexico");
+  console.log(conflictNames.includes(data[0].country) ? 'On ' : 'Off ')
+  console.log(conflictNames.length);
+  // console.log(conflictNames[0].name_of_conflict);
 
-// On hover control that displays information about hovered upon country
+  
+// for(var i = 0; i < conflictNames.length; i++) { (conflictNames[i].country === "Mexico" ) ? console.log(conflictNames[i].name_of_conflict) : console.log('Off') ;}
+
+ } ); // .addTo(myMap);
+
+ // On hover control that displays information about hovered upon country
 var displayInfo = L.control();
 
 displayInfo.onAdd = function (map) {
@@ -241,36 +254,81 @@ displayInfo.onAdd = function (map) {
     return this._div;
 };
 
+
+
 // Passes properties of hovered upon country and displays it in the control
-displayInfo.update = function (props) {
+displayInfo.update = function(props) {
+  var temp = "";
+
+  function conflictInfo(){
+    var temp = "";
+    for(var i = 0; i < conflictNames.length; i++) { 
+      ((conflictNames[i].country === props.name ) ? temp = conflictNames[i].name_of_conflict :  'Off' );
+      // console.log(conflictNames[i].name_of_conflict);
+
+      // console.log((temp === "yesy") ? temp : "NON");
+      // console.log(temp);
+
+      // (temp) ? console.log(temp) : 'Off';
+      while (temp ==conflictNames[i].name_of_conflict) {
+        // console.log(temp);
+      return temp
+    }
+    } 
+  }
+  // conflictInfo();
+  function conflictDead(){
+    var temp = "";
+    for(var i = 0; i < conflictNames.length; i++) { 
+      ((conflictNames[i].country === props.name ) ? temp = conflictNames[i].num_deaths_2019 :  'Off' );
+      // console.log(conflictNames[i].name_of_conflict);
+
+      // console.log((temp === "yesy") ? temp : "NON");
+      // console.log(temp);
+
+      // (temp) ? console.log(temp) : 'Off';
+      while (temp ==conflictNames[i].num_deaths_2019) {
+        // console.log(temp);
+      return temp
+    }
+    } 
+  }
+  
+
 
     this._div.innerHTML = '<h2>Wealth Countries</h2>' + (props ?
         '<h3>' + props.formal_en + '</h3>' + '<b>' + 'GDP in Trillions of USD: ' + '</b>' + props.gdp_md_est / 1000000 + '<br />' +
         '<b>' + ' GDP in Billions of USD: ' + '</b>' + props.gdp_md_est / 1000 + '<br />' +
         '<b>' + 'Economic Status: ' + '</b>' + props.economy + '<br />' +
-        '<b>' + 'Population: ' + '</b>' + props.pop_est / 1000000 + ' million people' :
-        'Hover over a European country');
+        '<b>' + 'Population: ' + '</b>' + props.pop_est / 1000000 + ' million people' + '<br />' +
+        '<b>' + 'CONFLICT: ' + '</b>' + conflictInfo() + ' Deaths: '+conflictDead() + '<br />' :
+  
+        'Hover over a country');   
+        // console.log(conflictZones);
+        // '<b>' + 'Conflict: ' + '</b>' + ((props.name === "Mexico") ? 'On' : 'Off') + ' million people' :
+
 };
 
 // displayInfo.addTo(myMap);
 
+///// Redundant appears above /////
 // Happens on mouse hover
-function highlight(e) {
-  onEachFeature: onEachFeature;
-    var layer = e.target;
+// function highlight(e) {
+//   onEachFeature: onEachFeature;
+//     var layer = e.target;
 
-    layer.setStyle({
-        weight: 3,
-        color: '#ffd32a'
-    });
+//     layer.setStyle({
+//         weight: 3,
+//         color: '#ffd32a'
+//     });
 
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
-    }
+//     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+//         layer.bringToFront();
+//     }
 
-    // Updates custom legend on hover
-    displayInfo.update(layer.feature.properties);
-}
+//     // Updates custom legend on hover
+//     displayInfo.update(layer.feature.properties);
+// }
 
 function style(feature) {
   return {
@@ -282,6 +340,8 @@ function style(feature) {
   };
 }
 
+///// Redundant appears above /////
+// Happens on mouse hover
 function highlight(e) {
   var layer = e.target;
 
@@ -345,6 +405,7 @@ function onEachFeature(feature, layer) {
     }); // .addTo(myMap);
   // console.log(plates);
 
+
     // Create overlay object to hold our overlay layer
     var overlayMaps = {
       Countries: countries,
@@ -354,6 +415,7 @@ function onEachFeature(feature, layer) {
       // Earthquakes2015: earthquakes2015, 
     };
   
+    ////  THis is where I used to create myMap before hover-zoom code ///////
     // Create our map, giving it the streetmap and earthquakes layers to display on load
     // var myMap = L.map("map", {
     //   worldCopyJump: true,
@@ -363,7 +425,6 @@ function onEachFeature(feature, layer) {
     //   zoom: 3,
     //   layers: [streetmap, plates, countries]  // , earthquakes, earthquakes2015]
     // });
-
 
     L.control.layers(baseMaps, overlayMaps,  {
       collapsed: false
