@@ -15,12 +15,22 @@
         "num_deaths_2019": 9452
     },
     {
-        "country": "Yemen/Saudi Arabia",
+        "country": "Yemen",
         "name_of_conflict": "Yemeni Crisis",
         "num_deaths_2019": 20882
     },
     {
-        "country": "Somalia/Kenya",
+        "country": "Saudi Arabia",
+        "name_of_conflict": "Yemeni Crisis",
+        "num_deaths_2019": 20882
+    },
+    {
+        "country": "Somalia",
+        "name_of_conflict": "Somali Civil War",
+        "num_deaths_2019": 2637
+    },
+    {
+        "country": "Kenya",
         "name_of_conflict": "Somali Civil War",
         "num_deaths_2019": 2637
     },
@@ -35,7 +45,22 @@
         "num_deaths_2019": 1298
     },
     {
-        "country": "Nigeria, Cameroon, Niger, Chad",
+        "country": "Nigeria",
+        "name_of_conflict": "Boko Haram Insurgency",
+        "num_deaths_2019": 280
+    },
+    {
+        "country": "Cameroon",
+        "name_of_conflict": "Boko Haram Insurgency",
+        "num_deaths_2019": 280
+    },
+    {
+        "country": "Niger",
+        "name_of_conflict": "Boko Haram Insurgency",
+        "num_deaths_2019": 280
+    },
+    {
+        "country": "Chad",
         "name_of_conflict": "Boko Haram Insurgency",
         "num_deaths_2019": 280
     },
@@ -55,12 +80,22 @@
         "num_deaths_2019": 1093
     },
     {
-        "country": "India/Pakistan",
+        "country": "India",
         "name_of_conflict": "Kashmir Conflict",
         "num_deaths_2019": 208
     },
     {
-        "country": "Pakistan/Iran",
+        "country": "Pakistan",
+        "name_of_conflict": "Kashmir Conflict",
+        "num_deaths_2019": 208
+    },
+    {
+        "country": "Pakistan",
+        "name_of_conflict": "Insurgency in Balochistan",
+        "num_deaths_2019": 143
+    },
+    {
+        "country": "Iran",
         "name_of_conflict": "Insurgency in Balochistan",
         "num_deaths_2019": 143
     },
@@ -75,12 +110,27 @@
         "num_deaths_2019": 148
     },
     {
-        "country": "Colombia, Venezuela, Ecuador",
+        "country": "Colombia",
         "name_of_conflict": "Colombian Conflict",
         "num_deaths_2019": 281
     },
     {
-        "country": "Palestine/Israel",
+        "country": "Venezuela",
+        "name_of_conflict": "Colombian Conflict",
+        "num_deaths_2019": 281
+    },
+    {
+        "country": "Ecuador",
+        "name_of_conflict": "Colombian Conflict",
+        "num_deaths_2019": 281
+    },
+    {
+        "country": "Israel",
+        "name_of_conflict": "Israeli-Palestinian Conflict",
+        "num_deaths_2019": 100
+    },
+    {
+        "country": "Palestine",
         "name_of_conflict": "Israeli-Palestinian Conflict",
         "num_deaths_2019": 100
     },
@@ -100,7 +150,22 @@
         "num_deaths_2019": 5
     },
     {
-        "country": "Turkey/Iraq/Syria/Kurdistan",
+        "country": "Turkey",
+        "name_of_conflict": "Kurdish-Turkish Conflict",
+        "num_deaths_2019": 1419
+    },
+    {
+        "country": "Iraq",
+        "name_of_conflict": "Kurdish-Turkish Conflict",
+        "num_deaths_2019": 1419
+    },
+    {
+        "country": "Syria",
+        "name_of_conflict": "Kurdish-Turkish Conflict",
+        "num_deaths_2019": 1419
+    },
+    {
+        "country": "Kurdistan",
         "name_of_conflict": "Kurdish-Turkish Conflict",
         "num_deaths_2019": 1419
     },
@@ -115,7 +180,47 @@
         "num_deaths_2019": 302
     },
     {
-        "country": "Algeria/Burkina Faso/Chad/Libya/Mali/Mauritania/Morocco/Niger/Tunisia",
+        "country": "Algeria",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Burkina Faso",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Chad",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Libya",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Mali",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Mauritania",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Morocco",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Niger",
+        "name_of_conflict": "Insurgency in the Maghreb",
+        "num_deaths_2019": 623
+    },
+    {
+        "country": "Tunisia",
         "name_of_conflict": "Insurgency in the Maghreb",
         "num_deaths_2019": 623
     },
@@ -180,7 +285,12 @@
         "num_deaths_2019": 32
     },
     {
-        "country": "Colombia/Venezuela",
+        "country": "Colombia",
+        "name_of_conflict": "War in Catatumbo",
+        "num_deaths_2019": 462
+    },
+    {
+        "country": "Venezuela",
         "name_of_conflict": "War in Catatumbo",
         "num_deaths_2019": 462
     },
@@ -215,12 +325,27 @@
         "num_deaths_2019": 3
     },
     {
-        "country": "Democratic Republic of the Congo/Central African Republic",
+        "country": "Democratic Republic of the Congo",
         "name_of_conflict": "LRA Insurgency",
         "num_deaths_2019": 0
     },
     {
-        "country": "Armenia/Azerbaijan/Artsakh",
+        "country": "Central African Republic",
+        "name_of_conflict": "LRA Insurgency",
+        "num_deaths_2019": 0
+    },
+    {
+        "country": "Armenia",
+        "name_of_conflict": "Nagorno-Karabakh Conflict",
+        "num_deaths_2019": 5
+    },
+    {
+        "country": "Azerbaijan",
+        "name_of_conflict": "Nagorno-Karabakh Conflict",
+        "num_deaths_2019": 5
+    },
+    {
+        "country": "Artsakh",
         "name_of_conflict": "Nagorno-Karabakh Conflict",
         "num_deaths_2019": 5
     },
@@ -270,7 +395,12 @@
         "num_deaths_2019": 408
     },
     {
-        "country": "Democratic Republic of the Congo/Angola",
+        "country": "Democratic Republic of the Congo",
+        "name_of_conflict": "Kamwina Nsapu Rebellion",
+        "num_deaths_2019": 0
+    },
+    {
+        "country": "Angola",
         "name_of_conflict": "Kamwina Nsapu Rebellion",
         "num_deaths_2019": 0
     }

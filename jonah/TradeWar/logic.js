@@ -1,6 +1,6 @@
 
 var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-01-01&endtime=" +
-"2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7";
+"2015-01-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.2";
 // var query2016 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=" +
 // "2016-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
 // var query2017 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2017-01-01&endtime=" +
@@ -10,8 +10,8 @@ var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson
 
 
 // Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-11-01&endtime=" +
-  "2019-11-20&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7";
+var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-11-01&endtime=" +
+  "2019-11-20&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.2";
 
 
 function createFeatures(earthquakeData) {
@@ -194,9 +194,9 @@ function createMap() {
         }; 
 
         function getColorCountry(d) {
-          return d > 10000000000 ? '#800026' :
-                 d > 5000000000  ? '#BD0026' :
-                 d > 2000000000  ? '#E31A1C' :
+          return d > 1000000000 ? '#800026' :
+                 d > 500000000  ? '#BD0026' :
+                 d > 200000000  ? '#E31A1C' :
                  d > 100000000  ? '#FC4E2A' :
                  d > 50000000  ? '#FD8D3C' :
                  d > 20000000   ? '#FEB24C' :
@@ -297,7 +297,7 @@ displayInfo.update = function(props) {
       return temp
     }
 
-    this._div.innerHTML = '<h2>Wealth Countries</h2>' + (props ?
+    this._div.innerHTML = '<h2>Global Index</h2>' + (props ?
         '<h3>' + props.name + '</h3>' + '<b>' + 'GDP in Trillions of USD: ' + '</b>' + props.gdp_md_est / 1000000 + '<br />' +
         '<b>' + ' GDP in Billions of USD: ' + '</b>' + props.gdp_md_est / 1000 + '<br />' +
         '<b>' + 'Economic Status: ' + '</b>' + props.economy + '<br />' +
@@ -307,13 +307,11 @@ displayInfo.update = function(props) {
         'Hover over a country');   
         // console.log(conflictZones);
         // '<b>' + 'Conflict: ' + '</b>' + ((props.name === "Mexico") ? 'On' : 'Off') + ' million people' :
-
 };
-
 
 // displayInfo.addTo(myMap);
 
-///// Redundant appears above /////
+///// Redundant appears below /////
 // Happens on mouse hover
 // function highlight(e) {
 //   onEachFeature: onEachFeature;
@@ -331,25 +329,75 @@ displayInfo.update = function(props) {
 //     // Updates custom legend on hover
 //     displayInfo.update(layer.feature.properties);
 // }
+///// Also may be redundant ///////////////////
+// function style(feature) {
+//   return {
+//       fillColor: getColor(feature.properties.gdp_md_est),
+//       weight: 1,
+//       opacity: 1,
+//       color: 'snow',
+//       fillOpacity: .7
+//   };
+// } 
+function codeComment() {"Ignore Me, used to fold the above comments"}
 
-function style(feature) {
-  return {
-      fillColor: getColor(feature.properties.gdp_md_est),
-      weight: 1,
-      opacity: 1,
-      color: 'snow',
-      fillOpacity: .7
-  };
-}
 
-///// Redundant appears above /////
+///// Redundancy appeared above /////
 // Happens on mouse hover
 function highlight(e) {
+
+  // function getColor(d) {
+  //   return d *.0000001 >= 8 ? 'blue' :
+  //          d *.0000001 > 6.4  ? 'red' :
+  //          d *.0000001 > 5.2  ? 'orange' :
+  //          d *.000001 > 4   ? 'yellow' :
+  //          d *.00001 > 0   ? 'white' :
+  //                     'blue';
+  // }
+
+
+var conflicts = "TradeWar/data/countries_in_conflict.json";
+var conflictNames = [];
+d3.json(conflicts, function(data) {
+
+  conflictNames = data.map(data => data);
+  function getColor(d) {
+    return d  >= 4 ? 'blue' :
+           d  > 3  ? 'red' :
+           d  > 2  ? 'orange' :
+           d  == 1   ? 'yellow' :
+           d  == 0   ? 'white' :
+                      'red';
+  }
+
+  function conflictLevel(){
+    var temp = [];
+    
+    for(var i = 0; i < conflictNames.length; i++) { 
+      // (conflictZones.includes(props.name) 
+      temp = conflictNames[i].country;
+      temp2 = "";
+      // console.log(layer.feature.properties.name);
+      // console.log(conflictZones);
+
+      if ( conflictZones.includes(layer.feature.properties.name)) { temp2 = 1} else {temp2 = 0};
+      // if ( conflictNames[i].country === data.name && temp2.length < 9 ) { temp2.push(conflictNames[i].num_deaths_2019)};
+    } 
+    // if (temp2.length > 2 ) {
+    //   temp = temp2+"🔥💣🔥";
+    //   } else if(temp.length === 1 || temp.length === 2 ) {temp =temp+"⚔️"} else {temp = "☮️"}
+    //   return temp
+    // }
+    // if (temp == 1 ) {
+    //     temp = 1;
+    //     } 
+        return temp2
+      }
   var layer = e.target;
 
   layer.setStyle({
       weight: 3,
-      color: '#ffd32a',
+      color:  getColor(conflictLevel()), // getColor(conflictNames[0].num_deaths_2019),  //  getColor(layer.feature.properties.pop_est),    //  '#ffd32a',
   });
 
   if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -357,7 +405,7 @@ function highlight(e) {
   }
 
   displayInfo.update(layer.feature.properties);
-}
+})}
 
 function reset(e) {
   countries.resetStyle(e.target);
