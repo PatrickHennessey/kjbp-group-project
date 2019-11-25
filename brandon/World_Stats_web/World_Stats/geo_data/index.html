@@ -61,14 +61,14 @@
                     //  console.log(i);
                     var country = data.features[i].properties.geounit;
                     
-                    // console.log(country);
-                    //   L.geoJson(data, 
-                    //     {
-                    //         // clickable: true,
-                    //         // Popup: country,
-                    //         // style: myCustomStyle
+                    console.log(country);
+                      L.geoJson(data, 
+                        {
+                            clickable: true,
+                            Popup: country,
+                            style: myCustomStyle
                           
-                    //      })
+                         })
                         globe.bindPopup("<h1>" + country  + "</h1>")
                         .addTo(map);
                     }
@@ -77,6 +77,45 @@
 
 
         });
+
+
+        var data_set = [1,2,4,5,6,11,12,23,24,55,43,67,77,82,99,100];
+
+
+
+    //     max = d3.max(data_set)
+    //     min = d3.max(data_set)
+    //     range = max / 10 ;
+    //     element_num = data_set.length;
+
+    //     break1 = range ;
+    //     break2 = range + break1;
+    //     break3 = range + break2 ;
+    //     break4 = range + break3 ;
+    //     break5 = range + break4 ;
+    //     break6 = range + break5 ;
+    //     break7 = range + break6 ;
+    //     break8 = range + break7 ;
+    //     break9 = range + break8 ;
+        
+    //     console.log("these are our breakpoints", break1, break2, break3, break4,break5, break6,break7,   break8,break9 );
+
+    //     console.log(max);
+
+    //     count1 = 0;
+    //     count2 = 0;
+
+    //    for (var i = 0; i < data_set.length; i++) 
+    //         { 
+    //            if ( data_set[i] >= (max / 5 ) ) count1 +=1 ; // data(i].push(elements_above50per)
+    //            if ( data_set[i] < (max / 5 ) ) count2 +=1 ; 
+    //             elements_below50per = count1;
+    //             elements_above50per = count2; 
+    //         //   if (i >= break1)      
+    //         }
+    //        console.log(count1);
+    //        console.log(count2);
+
 
     //    var geo = $.getJSON(myGeoJSONPath);
 
