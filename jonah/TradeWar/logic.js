@@ -1,6 +1,6 @@
 
-var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-01-01&endtime=" +
-"2015-01-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.2";
+var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-09-01&endtime=" +
+"2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0";
 // var query2016 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=" +
 // "2016-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
 // var query2017 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2017-01-01&endtime=" +
@@ -8,10 +8,11 @@ var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson
 // var query2018 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-01-01&endtime=" +
 // "2018-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
 
-
 // Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-11-01&endtime=" +
-  "2019-11-20&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.2";
+var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-09-01&endtime=" +
+  "2019-11-26&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
+
+var countryCoordsLink = "TradeWar/data/countriesGEO.json";
 
 
 function createFeatures(earthquakeData) {
@@ -130,6 +131,81 @@ function createFeatures2015(earthquakeData2015) {
   return earthquakes2015
 }
 
+function createFeaturesMarkers(countryMarkersData) {
+  
+  var countryMarkers = L.geoJSON(countryMarkersData, {
+
+  // Define a function we want to run once for each feature in the features array
+  // Give each feature a popup describing the place and time of the earthquake
+   onEachFeature: function(feature, layer) {
+    layer.bindPopup("<h3>" + feature.properties.name +
+      // "</h3><hr><p>" + new Date(feature.properties.time) + 
+      "</p>" +  "</h3><hr><p>" + "Code: " + feature.properties.country + "</p>" +
+      "</p>" +  "</h3><hr><p>" + "Location: " + feature.geometry.coordinates + "</p>" +
+      "</p>" +  "</h3><hr><p>" + "Population: " + feature.properties.pop_est + "</p>" 
+      )},
+
+    // pointToLayer: function(feature, latlng){
+
+    //   //   if (feature.properties.mag < 5.2) {
+    //   //     colorMag = "yellow";
+    //   //     radiusMag = (feature.properties.mag ) *20000;
+    //   //   }
+    //   //   else if (feature.properties.mag >= 5.2 && feature.properties.mag < 6.4) {
+    //   //     colorMag = "orange";
+    //   //     radiusMag = (feature.properties.mag ) *24000;
+    //   //   }   
+    //   //   else if (feature.properties.tsunami) {
+    //   //     colorMag = "blue";
+    //   //     radiusMag = (feature.properties.mag *1.4) *24000;
+    //   //   }   
+    //   //   else  {
+    //   //     colorMag = "red";
+    //   //     radiusMag = (feature.properties.mag *1.4) *24000;
+    //   //   }
+
+    //   //   function getColor(d) {
+    //   //     return d >= 8 ? 'blue' :
+    //   //            d > 6.4  ? 'red' :
+    //   //            d > 5.2  ? 'orange' :
+    //   //            d > 4   ? 'yellow' :
+    //   //            d > 0   ? 'white' :
+    //   //                       'blue';
+    //   // }
+
+    //   //   var geojsonMarkerOptions = {
+    //   //     radius: 100000, // radiusMag,
+    //   //     fillColor: "purple", // colorMag,
+    //   //     color: "purple",  // getColor(feature.properties.mag),
+    //   //     weight: 3,
+    //   //     opacity: 1,
+    //   //     fillOpacity: 0.35
+    //   // };
+
+    //     return L.circle(latlng, geojsonMarkerOptions )
+    //   }
+    })
+
+  return countryMarkers
+}
+
+  // var countryCoordsLink = "TradeWar/data/countriesGEO.json";
+  // var countryCoords = [];
+  // d3.json(countryCoordsLink, function(data) {
+  //   createFeatures(data.features);
+  // });
+  // function createFeatures(flagsData) {
+  //   function onEachFeature(feature, layer) {
+  //     layer.bindPopup("<h3>" + feature.properties.name +
+  //       "</h3><hr><p>" + new Date(feature.properties.country) + "</p>");
+  //   }
+  
+  // var countryFlags = L.geoJSON(flagsData, {
+  //   onEachFeature: onEachFeature
+  // });
+  // }
+  // var geoKeys = Object.keys(countryCoords);
+  // console.log(geoKeys);
 
 function createMap() {
 
@@ -142,6 +218,10 @@ function createMap() {
   d3.json(query2015, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes2015 = createFeatures2015(data.features);
+    
+    d3.json(countryCoordsLink, function(data) {
+      // Once we get a response, send the data.features object to the createFeatures function
+      var countryMarkers = createFeaturesMarkers(data.features);
 
   // Define streetmap and darkmap layers
   var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -164,6 +244,7 @@ function createMap() {
     "Dark Map": darkmap
   };
 
+  
   // var link2 = "TradeWar/data/ne_10m_admin_0_countries.geojson";
   // var link2 = "TradeWar/data/customLO.geo.json";
   var link2 = "TradeWar/data/countries_admn-0.geojson";
@@ -239,7 +320,7 @@ function createMap() {
 
     });
 
-    console.log(countries);        ////////////////////////////////////////////////////////////////////////////////////
+    // console.log(countries);        ////////////////////////////////////////////////////////////////////////////////////
 
 // Happens on mouse out
 // function reset(e) {
@@ -402,6 +483,7 @@ function highlight(e) {
   //                     'blue';
   // }
 
+
 var conflicts = "TradeWar/data/countries_in_conflict.json";
 var conflictNames = [];
 d3.json(conflicts, function(data) {
@@ -442,7 +524,9 @@ d3.json(conflicts, function(data) {
   }
 
   displayInfo.update(layer.feature.properties);
-})}
+}
+
+)}
 
 // function reset(e) {
 //   countries.resetStyle(e.target);
@@ -502,7 +586,9 @@ function onEachFeature(feature, layer) {
       Plates: plates,
       Earthquakes: earthquakes,
       Earthquakes2015: earthquakes2015,
-      Countries_GDP: countriesGDP
+      Countries_GDP: countriesGDP,
+      CountryMarkers: countryMarkers
+      
 
       // Earthquakes2015: earthquakes2015, 
     };
@@ -565,7 +651,7 @@ function onEachFeature(feature, layer) {
 
 })
 
-
+})
   };
 
 createMap();
