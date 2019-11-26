@@ -138,12 +138,10 @@ function createMap() {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes =  createFeatures(data.features);
 
-
   // Perform a GET request to the query URL
   d3.json(query2015, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes2015 = createFeatures2015(data.features);
-
 
   // Define streetmap and darkmap layers
   var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -171,10 +169,10 @@ function createMap() {
   var link2 = "TradeWar/data/countries_admn-0.geojson";
   d3.json(link2, function(data) {
 
-    for (var i = 0; i < data.features.length; i++) {
-      //   // console.log(data.features[i].properties.pop_est);
-        colorPop = data.features[i].properties.pop_est;
-    }
+    // for (var i = 0; i < data.features.length; i++) {
+    //   //   // console.log(data.features[i].properties.pop_est);
+    //     colorPop = data.features[i].properties.pop_est;
+    // }
 
     // Once we get a response, send the data.features object to the createFeatures function
     var countries = L.geoJson(data, {
@@ -183,7 +181,8 @@ function createMap() {
       style: function(countries) {
 
         return {
-          attribution: "XXXXXX 🇦🇴 XXXXXXX",
+          attribution: "XpopulationX",
+          user: "JONAH",
           color:  "red", // chooseColor(feature.properties.PlateName), // "white", 
           opacity: .8,
           fillColor: getColorCountry(countries.properties.pop_est),
@@ -204,32 +203,82 @@ function createMap() {
                               '#FFEDA0'
       } 
       },
-      
-
+    
     }); 
     
+
+    var countriesGDP = L.geoJson(data, {
+      
+      onEachFeature: onEachFeature,
+  
+      style: function(colorStyle) {
+  
+        return {
+          attribution: "XXGDPXX",
+          color:  "blue", // chooseColor(feature.properties.PlateName), // "white", 
+          opacity: .8,
+          fillColor: getColorCountry1(colorStyle.properties.gdp_md_est),
+          fillOpacity: 0.8,
+          weight: 1,
+          // pointerEvents: 'none',
+          // zIndex: 650
+        }; 
+  
+        function getColorCountry1(d) {
+          return d > 1000000000 ? '#800026' :
+                 d > 500000000  ? '#BD0026' :
+                 d > 200000000  ? '#E31A1C' :
+                 d > 100000000  ? '#FC4E2A' :
+                 d > 50000000  ? '#FD8D3C' :
+                 d > 20000000   ? '#FEB24C' :
+                 d > 10000000   ? '#FED976' :
+                              '#FFEDA0'
+      } 
+
+      },
+
+    });
+
+    console.log(countries);        ////////////////////////////////////////////////////////////////////////////////////
+
 // Happens on mouse out
+// function reset(e) {
+//   countries.resetStyle(e.target);
+//   // Resets custom legend when user unhovers
+//   displayInfo.update();
+// }
+    
 function reset(e) {
+  // countries.resetStyle(e.target);
+  // if (e.target.options.color === "red") {
+    if (e.target.options.attribution === "XpopulationX") {
+console.log("XpopulationX");
+// console.log(e.target.options);
+
   countries.resetStyle(e.target);
-  // Resets custom legend when user unhovers
+  // console.log(e.target.options.color);
+  // console.log(countriesGDP.options);
+
+} else if (e.target.options.attribution === "XXGDPXX") {
+  console.log("XXGDPXX");
+
+  countriesGDP.resetStyle(e.target);}
+  // console.log(e.target.options.color);
+
   displayInfo.update();
+
 }
 
 //////////////
 var conflicts = "TradeWar/data/countries_in_conflict.json";
 var conflictZones = [];
 d3.json(conflicts, function(data) {
-  // onEachFeature: onEachFeature,
+ 
   // Once we get a response, send the data.features object to the createFeatures function
-  // createFeatures(data.features);
-  // console.log(data);
-  // console.dir(countries._layers[39].feature.properties.name);
-  // console.dir(data[0].country);
+
   conflictZones = data.map(data => data.country);
   conflictNames = data.map(data => data);
-  // conflictZones = conflictZones.toString();
-  // conflictZones = data[0].country;
-  // return conflictZones;
+
   console.log(conflictNames[0].country);
   console.log(data[0].country);
   console.log(conflictZones.includes('Canada') ? 'YES' : 'NO');
@@ -239,11 +288,7 @@ d3.json(conflicts, function(data) {
   console.log(conflictNames.includes(data[0].country) ? 'On ' : 'Off ')
   console.log(conflictNames.length);
   // console.log(conflictZones);
-
   // console.log(conflictNames[0].name_of_conflict);
-
-  
-// for(var i = 0; i < conflictNames.length; i++) { (conflictNames[i].country === "Mexico" ) ? console.log(conflictNames[i].name_of_conflict) : console.log('Off') ;}
 
  } ); // .addTo(myMap);
 
@@ -263,7 +308,7 @@ displayInfo.update = function(props) {
   var temp = [];
   var temp2 = [];
   
-
+// Function for displaying Countries in Conflict
   function conflictInfo(){
     var temp = [];
     var temp2 = [];
@@ -282,6 +327,8 @@ displayInfo.update = function(props) {
     }
 
   // conflictInfo();
+
+// Function for displaying Countries in Conflict Body counts
   function conflictDead(){
     var temp = [];
     var temp2 = [];
@@ -355,7 +402,6 @@ function highlight(e) {
   //                     'blue';
   // }
 
-
 var conflicts = "TradeWar/data/countries_in_conflict.json";
 var conflictNames = [];
 d3.json(conflicts, function(data) {
@@ -381,16 +427,7 @@ d3.json(conflicts, function(data) {
       // console.log(conflictZones);
 
       if ( conflictZones.includes(layer.feature.properties.name)) { temp2 = 1} else {temp2 = 0};
-      // if ( conflictNames[i].country === data.name && temp2.length < 9 ) { temp2.push(conflictNames[i].num_deaths_2019)};
     } 
-    // if (temp2.length > 2 ) {
-    //   temp = temp2+"🔥💣🔥";
-    //   } else if(temp.length === 1 || temp.length === 2 ) {temp =temp+"⚔️"} else {temp = "☮️"}
-    //   return temp
-    // }
-    // if (temp == 1 ) {
-    //     temp = 1;
-    //     } 
         return temp2
       }
   var layer = e.target;
@@ -407,10 +444,13 @@ d3.json(conflicts, function(data) {
   displayInfo.update(layer.feature.properties);
 })}
 
-function reset(e) {
-  countries.resetStyle(e.target);
-  displayInfo.update();
-}
+// function reset(e) {
+//   countries.resetStyle(e.target);
+//   if (countriesGDP) {
+//   countriesGDP.resetStyle(e.target);
+// }
+//   displayInfo.update();
+// }
 
     // Create our map, giving it the streetmap and earthquakes layers to display on load
     var myMap = L.map("map", {
@@ -461,7 +501,9 @@ function onEachFeature(feature, layer) {
       Countries: countries,
       Plates: plates,
       Earthquakes: earthquakes,
-      Earthquakes2015: earthquakes2015
+      Earthquakes2015: earthquakes2015,
+      Countries_GDP: countriesGDP
+
       // Earthquakes2015: earthquakes2015, 
     };
   
@@ -525,7 +567,6 @@ function onEachFeature(feature, layer) {
 
 
   };
-
 
 createMap();
 
