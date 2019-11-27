@@ -1,20 +1,6 @@
 
-var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-09-01&endtime=" +
-"2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0";
-// var query2016 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=" +
-// "2016-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
-// var query2017 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2017-01-01&endtime=" +
-// "2017-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
-// var query2018 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-01-01&endtime=" +
-// "2018-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5";
-
-// Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-09-01&endtime=" +
-  "2019-11-26&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
-
-var countryCoordsLink = "TradeWar/data/countriesGEO.json";
-
-
+/// This is the base earthquake layer, //////////////////////////////////////////////////////////////////////
+/// to do: change to year to date and remove second earth quake layer 
 function createFeatures(earthquakeData) {
   
   var earthquakes = L.geoJSON(earthquakeData, {
@@ -73,6 +59,7 @@ function createFeatures(earthquakeData) {
   return earthquakes
 }
 
+/// This is the earth quakes 2015 layer /////////////////////////////////////////////////////////////////////
 function createFeatures2015(earthquakeData2015) {
   
   var earthquakes2015 = L.geoJSON(earthquakeData2015, {
@@ -131,6 +118,7 @@ function createFeatures2015(earthquakeData2015) {
   return earthquakes2015
 }
 
+/// This is the Flag Markers layer  ////////////////////////////////////////////////////////////////////////
 function createFeaturesMarkers(countryMarkersData) {
   
   var countryMarkers = L.geoJSON(countryMarkersData, {
@@ -145,69 +133,71 @@ function createFeaturesMarkers(countryMarkersData) {
       "</p>" +  "</h3><hr><p>" + "Population: " + feature.properties.pop_est + "</p>" 
       )},
 
-    // pointToLayer: function(feature, latlng){
+    pointToLayer: function(feature, latlng){
 
-    //   //   if (feature.properties.mag < 5.2) {
-    //   //     colorMag = "yellow";
-    //   //     radiusMag = (feature.properties.mag ) *20000;
-    //   //   }
-    //   //   else if (feature.properties.mag >= 5.2 && feature.properties.mag < 6.4) {
-    //   //     colorMag = "orange";
-    //   //     radiusMag = (feature.properties.mag ) *24000;
-    //   //   }   
-    //   //   else if (feature.properties.tsunami) {
-    //   //     colorMag = "blue";
-    //   //     radiusMag = (feature.properties.mag *1.4) *24000;
-    //   //   }   
-    //   //   else  {
-    //   //     colorMag = "red";
-    //   //     radiusMag = (feature.properties.mag *1.4) *24000;
-    //   //   }
 
-    //   //   function getColor(d) {
-    //   //     return d >= 8 ? 'blue' :
-    //   //            d > 6.4  ? 'red' :
-    //   //            d > 5.2  ? 'orange' :
-    //   //            d > 4   ? 'yellow' :
-    //   //            d > 0   ? 'white' :
-    //   //                       'blue';
-    //   // }
+      //   if (feature.properties.mag < 5.2) {
+      //     colorMag = "yellow";
+      //     radiusMag = (feature.properties.mag ) *20000;
+      //   }
+      //   else if (feature.properties.mag >= 5.2 && feature.properties.mag < 6.4) {
+      //     colorMag = "orange";
+      //     radiusMag = (feature.properties.mag ) *24000;
+      //   }   
+      //   else if (feature.properties.tsunami) {
+      //     colorMag = "blue";
+      //     radiusMag = (feature.properties.mag *1.4) *24000;
+      //   }   
+      //   else  {
+      //     colorMag = "red";
+      //     radiusMag = (feature.properties.mag *1.4) *24000;
+      //   }
 
-    //   //   var geojsonMarkerOptions = {
-    //   //     radius: 100000, // radiusMag,
-    //   //     fillColor: "purple", // colorMag,
-    //   //     color: "purple",  // getColor(feature.properties.mag),
-    //   //     weight: 3,
-    //   //     opacity: 1,
-    //   //     fillOpacity: 0.35
-    //   // };
+      //   function getColor(d) {
+      //     return d >= 8 ? 'blue' :
+      //            d > 6.4  ? 'red' :
+      //            d > 5.2  ? 'orange' :
+      //            d > 4   ? 'yellow' :
+      //            d > 0   ? 'white' :
+      //                       'blue';
+      // }
 
-    //     return L.circle(latlng, geojsonMarkerOptions )
-    //   }
+      //   var geojsonMarkerOptions = {
+      //     iconUrl: 'http://www.senojflags.com/images/country-flag-icons/Afghanistan-Flag.png',
+      //     // radius: 100000, // radiusMag,
+      //     // fillColor: "purple", // colorMag,
+      //     // color: "purple",  // getColor(feature.properties.mag),
+      //     // weight: 3,
+      //     // opacity: 1,
+      //     // fillOpacity: 0.35
+      // };
+      function codeComment() {"Ignore Me, used to fold the above comments"}
+
+      var flag = L.icon({
+        shadowUrl: 'TradeWar/data/Flags/shadow.png',
+
+        iconUrl: `TradeWar/data/Flags/${feature.properties.country}.png`,
+        iconSize:     [30, 30], // size of the icon
+        shadowSize:   [70, 70], // size of the shadow
+        // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [16, 26],  // the same for the shadow
+        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+        return L.marker(latlng, { icon: flag} )
+      }
     })
 
   return countryMarkers
 }
 
-  // var countryCoordsLink = "TradeWar/data/countriesGEO.json";
-  // var countryCoords = [];
-  // d3.json(countryCoordsLink, function(data) {
-  //   createFeatures(data.features);
-  // });
-  // function createFeatures(flagsData) {
-  //   function onEachFeature(feature, layer) {
-  //     layer.bindPopup("<h3>" + feature.properties.name +
-  //       "</h3><hr><p>" + new Date(feature.properties.country) + "</p>");
-  //   }
-  
-  // var countryFlags = L.geoJSON(flagsData, {
-  //   onEachFeature: onEachFeature
-  // });
-  // }
-  // var geoKeys = Object.keys(countryCoords);
-  // console.log(geoKeys);
-
 function createMap() {
+
+// Store our API endpoint inside queryUrl
+var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-09-01&endtime=" +
+"2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0";
+
+var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-09-01&endtime=" +
+  "2019-11-26&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
 
     // Perform a GET request to the query URL
   d3.json(queryUrl, function(data) {
@@ -219,6 +209,7 @@ function createMap() {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes2015 = createFeatures2015(data.features);
     
+    var countryCoordsLink = "TradeWar/data/countriesGEO.json";
     d3.json(countryCoordsLink, function(data) {
       // Once we get a response, send the data.features object to the createFeatures function
       var countryMarkers = createFeaturesMarkers(data.features);
@@ -244,7 +235,7 @@ function createMap() {
     "Dark Map": darkmap
   };
 
-  
+/// This is the Countries Choropleth Layer currently shows the Population Est ////////////////////////////////
   // var link2 = "TradeWar/data/ne_10m_admin_0_countries.geojson";
   // var link2 = "TradeWar/data/customLO.geo.json";
   var link2 = "TradeWar/data/countries_admn-0.geojson";
@@ -287,7 +278,7 @@ function createMap() {
     
     }); 
     
-
+/// This is the CountriesGDP  Choropleth Layer currently shows the GDP Est ////////////////////////////////
     var countriesGDP = L.geoJson(data, {
       
       onEachFeature: onEachFeature,
@@ -315,27 +306,17 @@ function createMap() {
                  d > 10000000   ? '#FED976' :
                               '#FFEDA0'
       } 
-
       },
-
     });
 
     // console.log(countries);        ////////////////////////////////////////////////////////////////////////////////////
 
-// Happens on mouse out
-// function reset(e) {
-//   countries.resetStyle(e.target);
-//   // Resets custom legend when user unhovers
-//   displayInfo.update();
-// }
-    
 function reset(e) {
   // countries.resetStyle(e.target);
   // if (e.target.options.color === "red") {
     if (e.target.options.attribution === "XpopulationX") {
 console.log("XpopulationX");
 // console.log(e.target.options);
-
   countries.resetStyle(e.target);
   // console.log(e.target.options.color);
   // console.log(countriesGDP.options);
@@ -345,12 +326,11 @@ console.log("XpopulationX");
 
   countriesGDP.resetStyle(e.target);}
   // console.log(e.target.options.color);
-
   displayInfo.update();
 
 }
 
-//////////////
+////// This is the countries in conflict code  /////////////////////////////////////////////////////////////
 var conflicts = "TradeWar/data/countries_in_conflict.json";
 var conflictZones = [];
 d3.json(conflicts, function(data) {
@@ -360,16 +340,6 @@ d3.json(conflicts, function(data) {
   conflictZones = data.map(data => data.country);
   conflictNames = data.map(data => data);
 
-  console.log(conflictNames[0].country);
-  console.log(data[0].country);
-  console.log(conflictZones.includes('Canada') ? 'YES' : 'NO');
-  // console.log((conflictZones.indexOf('Canada') ) ? 'On' : 'Off') 
-  console.log(conflictNames[1]['name_of_conflict']);
-  // console.log(props.name === "Mexico");
-  console.log(conflictNames.includes(data[0].country) ? 'On ' : 'Off ')
-  console.log(conflictNames.length);
-  // console.log(conflictZones);
-  // console.log(conflictNames[0].name_of_conflict);
 
  } ); // .addTo(myMap);
 
@@ -383,7 +353,6 @@ displayInfo.onAdd = function (map) {
 };
 
 
-
 // Passes properties of hovered upon country and displays it in the control
 displayInfo.update = function(props) {
   var temp = [];
@@ -395,9 +364,7 @@ displayInfo.update = function(props) {
     var temp2 = [];
 
     for(var i = 0; i < conflictNames.length; i++) { 
-      // ((conflictNames[i].country === props.name ) ? temp = conflictNames[i].name_of_conflict :  'Off' );
-      // ((conflictNames[i].country === props.name ) ? temp2.push(conflictNames[i].name_of_conflict) :  'Off' );
-      // console.dir(conflictNames[15].num_deaths_2019);
+
       if ( conflictNames[i].country === props.name && temp.length <= 2 ) { temp.push(conflictNames[i].name_of_conflict)};
       if ( conflictNames[i].country === props.name && temp2.length < 9 ) { temp2.push(conflictNames[i].name_of_conflict)};
     } 
@@ -469,20 +436,9 @@ displayInfo.update = function(props) {
 // } 
 function codeComment() {"Ignore Me, used to fold the above comments"}
 
-
-///// Redundancy appeared above /////
+///// A Redundancy appeared above and is commented out /////
 // Happens on mouse hover
 function highlight(e) {
-
-  // function getColor(d) {
-  //   return d *.0000001 >= 8 ? 'blue' :
-  //          d *.0000001 > 6.4  ? 'red' :
-  //          d *.0000001 > 5.2  ? 'orange' :
-  //          d *.000001 > 4   ? 'yellow' :
-  //          d *.00001 > 0   ? 'white' :
-  //                     'blue';
-  // }
-
 
 var conflicts = "TradeWar/data/countries_in_conflict.json";
 var conflictNames = [];
@@ -528,15 +484,7 @@ d3.json(conflicts, function(data) {
 
 )}
 
-// function reset(e) {
-//   countries.resetStyle(e.target);
-//   if (countriesGDP) {
-//   countriesGDP.resetStyle(e.target);
-// }
-//   displayInfo.update();
-// }
-
-    // Create our map, giving it the streetmap and earthquakes layers to display on load
+//// Create our map, giving it the streetmap and earthquakes layers to display on load   ////////////////////
     var myMap = L.map("map", {
       worldCopyJump: true,
       center: [
@@ -558,8 +506,7 @@ function onEachFeature(feature, layer) {
   });
 }
 
-////////////////////////////////////////////////////////
-    
+////// THis is the Plates layer   ///////////////////////////////////////////////////////////////////////
   var link = "TradeWar/data/PB2002_plates.json";
   d3.json(link, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
@@ -579,8 +526,7 @@ function onEachFeature(feature, layer) {
     }); // .addTo(myMap);
   // console.log(plates);
 
-
-    // Create overlay object to hold our overlay layer
+//// Create overlay object to hold our overlay layer //////////////////////////////////////////////////////
     var overlayMaps = {
       Countries: countries,
       Plates: plates,
@@ -588,22 +534,8 @@ function onEachFeature(feature, layer) {
       Earthquakes2015: earthquakes2015,
       Countries_GDP: countriesGDP,
       CountryMarkers: countryMarkers
-      
-
-      // Earthquakes2015: earthquakes2015, 
     };
   
-    ////  THis is where I used to create myMap before hover-zoom code ///////
-    // Create our map, giving it the streetmap and earthquakes layers to display on load
-    // var myMap = L.map("map", {
-    //   worldCopyJump: true,
-    //   center: [
-    //     37.09, -70.00
-    //   ],
-    //   zoom: 3,
-    //   layers: [streetmap, plates, countries]  // , earthquakes, earthquakes2015]
-    // });
-
     L.control.layers(baseMaps, overlayMaps,  {
       collapsed: false
     }).addTo(myMap);
@@ -657,21 +589,3 @@ function onEachFeature(feature, layer) {
 createMap();
 
 
-
-// var geoKeys = Object.keys(countries);
-// console.log(geoKeys);
-
-    // console.log(data.features[176].properties.name);
-    // console.log(data.features[176].properties.pop_est);
-    // console.log(data.features.length);
-    // console.log(countries._layers[100].options);
-
-//     console.dir(countries._layers[39].feature.properties.name);
-//     console.dir(countries._layers[39].feature.properties.pop_est)
-//     console.dir(countries._layers[39].feature.properties.income_grp)
-//     console.dir(countries._layers[39].feature.properties.economy)
-//     console.dir(countries._layers[39].feature.properties.formal_en)
-//     console.dir(countries._layers[39].feature.properties.brk_a3)
-//     console.dir(countries._layers[39].feature.properties.continent)
-
-//     console.dir(countries._layers)
