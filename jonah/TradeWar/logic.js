@@ -1,3 +1,28 @@
+////// THis is the Plates layer   ///////////////////////////////////////////////////////////////////////
+// var link = "TradeWar/data/PB2002_plates.json";
+var plates = [];
+function createFeaturesPlates(platesData) {
+
+// d3.json(link, function(data) {
+  // Once we get a response, send the data.features object to the createFeatures function
+  var plates = L.geoJson(platesData, {
+
+    style: function(plates) {
+      return {
+        color:  "magenta", // chooseColor(feature.properties.PlateName), // "white", 
+        opacity: .8,
+        fillColor: "white", 
+        fillOpacity: 0.0,
+        weight: 1,
+        // pointerEvents: 'none',
+        // zIndex: 650
+      };
+    }
+  }); // .addTo(myMap);
+  return plates
+// })  
+}
+// console.log(plates);
 
 /// This is the base earthquake layer, //////////////////////////////////////////////////////////////////////
 /// to do: change to year to date and remove second earth quake layer 
@@ -59,64 +84,6 @@ function createFeatures(earthquakeData) {
   return earthquakes
 }
 
-/// This is the earth quakes 2015 layer /////////////////////////////////////////////////////////////////////
-function createFeatures2015(earthquakeData2015) {
-  
-  var earthquakes2015 = L.geoJSON(earthquakeData2015, {
-
-  // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
-   onEachFeature: function(feature, layer) {
-    layer.bindPopup("<h3>" + feature.properties.place +
-      "</h3><hr><p>" + new Date(feature.properties.time) + 
-      "</p>" +  "</h3><hr><p>" + "Magnitude: " + feature.properties.mag + "</p>" +
-      "</p>" +  "</h3><hr><p>" + "Location: " + feature.geometry.coordinates + "</p>" +
-      "</p>" +  "</h3><hr><p>" + "Tsunami: " + feature.properties.tsunami + "</p>" 
-      )},
-
-    pointToLayer: function(feature, latlng){
-
-        if (feature.properties.mag < 5.2) {
-          colorMag = "yellow";
-          radiusMag = (feature.properties.mag ) *20000;
-        }
-        else if (feature.properties.mag >= 5.2 && feature.properties.mag < 6.4) {
-          colorMag = "orange";
-          radiusMag = (feature.properties.mag ) *24000;
-        }   
-        else if (feature.properties.tsunami) {
-          colorMag = "blue";
-          radiusMag = (feature.properties.mag *1.4) *24000;
-        }   
-        else  {
-          colorMag = "red";
-          radiusMag = (feature.properties.mag *1.4) *24000;
-        }
-
-        function getColor(d) {
-          return d >= 8 ? 'blue' :
-                 d > 6.4  ? 'red' :
-                 d > 5.2  ? 'orange' :
-                 d > 4   ? 'yellow' :
-                 d > 0   ? 'white' :
-                            'blue';
-      }
-
-        var geojsonMarkerOptions = {
-          radius: radiusMag,
-          fillColor: colorMag,
-          color: getColor(feature.properties.mag),
-          weight: 3,
-          opacity: 1,
-          fillOpacity: 0.5
-      };
-
-        return L.circle(latlng, geojsonMarkerOptions )
-      }
-    })
-
-  return earthquakes2015
-}
 
 /// This is the Flag Markers layer  ////////////////////////////////////////////////////////////////////////
 function createFeaturesMarkers(countryMarkersData) {
@@ -196,23 +163,39 @@ function createMap() {
 var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-09-01&endtime=" +
 "2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0";
 
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-09-01&endtime=" +
-  "2019-11-26&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
+var d = new Date();
+var year = d.getFullYear();
+var month = d.getMonth();
+var day = d.getDate();
+var ytd = d.setFullYear(d.getFullYear() - 1);
+var c = new Date(year - 1, month, day)
+var ytd = new Date(ytd)
+var date = ytd.toString();
 
+var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime="+
+`${year-1}-${month}-${day}`+"&endtime=" +
+`${year}-${month}-${day}`+"&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
     // Perform a GET request to the query URL
   d3.json(queryUrl, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes =  createFeatures(data.features);
 
+/////  earthquakes 2015 DEPRECATED ////////////////////////
   // Perform a GET request to the query URL
-  d3.json(query2015, function(data) {
-    // Once we get a response, send the data.features object to the createFeatures function
-    var earthquakes2015 = createFeatures2015(data.features);
+  // d3.json(query2015, function(data) {
+  //   // Once we get a response, send the data.features object to the createFeatures function
+  //   var earthquakes2015 = createFeatures2015(data.features);
     
     var countryCoordsLink = "TradeWar/data/countriesGEO.json";
     d3.json(countryCoordsLink, function(data) {
       // Once we get a response, send the data.features object to the createFeatures function
       var countryMarkers = createFeaturesMarkers(data.features);
+
+    var link = "TradeWar/data/PB2002_plates.json";
+    // var plates = [];
+    d3.json(link, function(data) {
+      // Once we get a response, send the data.features object to the createFeatures function
+      var plates  = createFeaturesPlates(data.features);
 
   // Define streetmap and darkmap layers
   var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -258,7 +241,7 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&
           color:  "red", // chooseColor(feature.properties.PlateName), // "white", 
           opacity: .8,
           fillColor: getColorCountry(countries.properties.pop_est),
-          fillOpacity: 0.8,
+          fillOpacity: 0.6,
           weight: 1,
           // pointerEvents: 'none',
           // zIndex: 650
@@ -290,7 +273,7 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&
           color:  "blue", // chooseColor(feature.properties.PlateName), // "white", 
           opacity: .8,
           fillColor: getColorCountry1(colorStyle.properties.gdp_md_est),
-          fillOpacity: 0.8,
+          fillOpacity: 0.6,
           weight: 1,
           // pointerEvents: 'none',
           // zIndex: 650
@@ -404,39 +387,7 @@ displayInfo.update = function(props) {
         // '<b>' + 'Conflict: ' + '</b>' + ((props.name === "Mexico") ? 'On' : 'Off') + ' million people' :
 };
 
-// displayInfo.addTo(myMap);
 
-///// Redundant appears below /////
-// Happens on mouse hover
-// function highlight(e) {
-//   onEachFeature: onEachFeature;
-//     var layer = e.target;
-
-//     layer.setStyle({
-//         weight: 3,
-//         color: '#ffd32a'
-//     });
-
-//     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-//         layer.bringToFront();
-//     }
-
-//     // Updates custom legend on hover
-//     displayInfo.update(layer.feature.properties);
-// }
-///// Also may be redundant ///////////////////
-// function style(feature) {
-//   return {
-//       fillColor: getColor(feature.properties.gdp_md_est),
-//       weight: 1,
-//       opacity: 1,
-//       color: 'snow',
-//       fillOpacity: .7
-//   };
-// } 
-function codeComment() {"Ignore Me, used to fold the above comments"}
-
-///// A Redundancy appeared above and is commented out /////
 // Happens on mouse hover
 function highlight(e) {
 
@@ -506,32 +457,13 @@ function onEachFeature(feature, layer) {
   });
 }
 
-////// THis is the Plates layer   ///////////////////////////////////////////////////////////////////////
-  var link = "TradeWar/data/PB2002_plates.json";
-  d3.json(link, function(data) {
-    // Once we get a response, send the data.features object to the createFeatures function
-    var plates = L.geoJson(data, {
-  
-      style: function(plates) {
-        return {
-          color:  "magenta", // chooseColor(feature.properties.PlateName), // "white", 
-          opacity: .8,
-          fillColor: "white", 
-          fillOpacity: 0.0,
-          weight: 1,
-          // pointerEvents: 'none',
-          // zIndex: 650
-        };
-      }
-    }); // .addTo(myMap);
-  // console.log(plates);
 
 //// Create overlay object to hold our overlay layer //////////////////////////////////////////////////////
     var overlayMaps = {
       Countries: countries,
       Plates: plates,
       Earthquakes: earthquakes,
-      Earthquakes2015: earthquakes2015,
+      // Earthquakes2015: earthquakes2015,
       Countries_GDP: countriesGDP,
       CountryMarkers: countryMarkers
     };
@@ -574,14 +506,13 @@ function onEachFeature(feature, layer) {
   
   legend.addTo(myMap);
   
-  })
-  
+  })   ///////////////////   Old Plates layer position bracket but now line 283 countries geojson  ///////////////
   
 })
 
 })
 
-})
+// }) DEPRECATED  earthquakes2015  closing bracket
 
 })
   };
