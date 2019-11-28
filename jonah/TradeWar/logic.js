@@ -84,7 +84,6 @@ function createFeatures(earthquakeData) {
   return earthquakes
 }
 
-
 /// This is the Flag Markers layer  ////////////////////////////////////////////////////////////////////////
 function createFeaturesMarkers(countryMarkersData) {
   
@@ -93,63 +92,37 @@ function createFeaturesMarkers(countryMarkersData) {
   // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
    onEachFeature: function(feature, layer) {
-    layer.bindPopup("<h3>" + feature.properties.name +
+    layer.bindTooltip("<h2>" + "  " + feature.properties.country_name + "  " +
+    "<img src='TradeWar/data/Flags/"+`${feature.properties.country}`+".png' alt='TradeWar/data/Flags/NONE.png' style='float:right;clear:both'  height='60' width='60'></img>"+ "</p>" + "<br> " +
+
       // "</h3><hr><p>" + new Date(feature.properties.time) + 
-      "</p>" +  "</h3><hr><p>" + "Code: " + feature.properties.country + "</p>" +
-      "</p>" +  "</h3><hr><p>" + "Location: " + feature.geometry.coordinates + "</p>" +
-      "</p>" +  "</h3><hr><p>" + "Population: " + feature.properties.pop_est + "</p>" 
+      "</h3><p>" + "Code: " + feature.properties.country + " " +
+      // "<hr><p>" + "Location: " + feature.geometry.coordinates + "</p>" +
+      "<p>" + "Import Rank: " + feature.properties.imp_rank +"<br>"+ "Imports YTD: "+feature.properties.ytd_cus+  "</p>" +
+      "<p>" + "Export Rank: " + feature.properties.exp_rank + "<br>"+ "Exports YTD: "+feature.properties.exp_ytd+ "</p>" +
+      "<p>" + "Balance Rank: " + feature.properties.bal_rank + "<br>"+ "Balance YTD: "+feature.properties.bal_ytd+ "</p>" 
+      ,  {sticky: true, offset:[-4,0], direction: 'left' }
       )},
 
     pointToLayer: function(feature, latlng){
-
-
-      //   if (feature.properties.mag < 5.2) {
-      //     colorMag = "yellow";
-      //     radiusMag = (feature.properties.mag ) *20000;
-      //   }
-      //   else if (feature.properties.mag >= 5.2 && feature.properties.mag < 6.4) {
-      //     colorMag = "orange";
-      //     radiusMag = (feature.properties.mag ) *24000;
-      //   }   
-      //   else if (feature.properties.tsunami) {
-      //     colorMag = "blue";
-      //     radiusMag = (feature.properties.mag *1.4) *24000;
-      //   }   
-      //   else  {
-      //     colorMag = "red";
-      //     radiusMag = (feature.properties.mag *1.4) *24000;
-      //   }
-
-      //   function getColor(d) {
-      //     return d >= 8 ? 'blue' :
-      //            d > 6.4  ? 'red' :
-      //            d > 5.2  ? 'orange' :
-      //            d > 4   ? 'yellow' :
-      //            d > 0   ? 'white' :
-      //                       'blue';
-      // }
-
-      //   var geojsonMarkerOptions = {
-      //     iconUrl: 'http://www.senojflags.com/images/country-flag-icons/Afghanistan-Flag.png',
-      //     // radius: 100000, // radiusMag,
-      //     // fillColor: "purple", // colorMag,
-      //     // color: "purple",  // getColor(feature.properties.mag),
-      //     // weight: 3,
-      //     // opacity: 1,
-      //     // fillOpacity: 0.35
-      // };
-      function codeComment() {"Ignore Me, used to fold the above comments"}
+      ///  Hides the poles for NONE flags ///// 
+      if ( feature.properties.country === "NONE") {
+        var shadow = "TradeWar/data/Flags/NONE.png";
+        console.log(feature.properties.country);
+      } else {
+        var shadow = "TradeWar/data/Flags/shadow.png";
+      }
 
       var flag = L.icon({
-        shadowUrl: 'TradeWar/data/Flags/shadow.png',
-
+        shadowUrl: shadow,
         iconUrl: `TradeWar/data/Flags/${feature.properties.country}.png`,
-        iconSize:     [30, 30], // size of the icon
-        shadowSize:   [70, 70], // size of the shadow
+        iconSize:     [26, 26], // size of the icon
+        shadowSize:   [64, 64], // size of the shadow
         // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 26],  // the same for the shadow
+        shadowAnchor: [17, 22],  // the same for the shadow
         // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
+    // console.log(feature.properties.country);
         return L.marker(latlng, { icon: flag} )
       }
     })
@@ -160,8 +133,6 @@ function createFeaturesMarkers(countryMarkersData) {
 function createMap() {
 
 // Store our API endpoint inside queryUrl
-var query2015 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-09-01&endtime=" +
-"2015-12-31&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0";
 
 var d = new Date();
 var year = d.getFullYear();
@@ -174,19 +145,14 @@ var date = ytd.toString();
 
 var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime="+
 `${year-1}-${month}-${day}`+"&endtime=" +
-`${year}-${month}-${day}`+"&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
+`${year}-${month}-${day}`+"&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5.0"; 
     // Perform a GET request to the query URL
   d3.json(queryUrl, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
     var earthquakes =  createFeatures(data.features);
-
-/////  earthquakes 2015 DEPRECATED ////////////////////////
-  // Perform a GET request to the query URL
-  // d3.json(query2015, function(data) {
-  //   // Once we get a response, send the data.features object to the createFeatures function
-  //   var earthquakes2015 = createFeatures2015(data.features);
     
-    var countryCoordsLink = "TradeWar/data/countriesGEO.json";
+    // var countryCoordsLink = "TradeWar/data/countriesGEO.json";  
+    var countryCoordsLink = "TradeWar/data/TradeData/TradeData_geo.json";
     d3.json(countryCoordsLink, function(data) {
       // Once we get a response, send the data.features object to the createFeatures function
       var countryMarkers = createFeaturesMarkers(data.features);
@@ -286,7 +252,6 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&
                  d > 200000  ? '#99d8c9' :
                  d > 700   ? '#ccece6' :
                               '#edf8fb'
-
 
       } 
       },
@@ -442,7 +407,7 @@ d3.json(conflicts, function(data) {
         37.09, -70.00
       ],
       zoom: 3,
-      layers: [streetmap, countries]  // , earthquakes, earthquakes2015]
+      layers: [darkmap, countriesGDP, countryMarkers]  // , earthquakes, earthquakes2015]
     });
 
 function zoomToCountry(e) {
@@ -460,7 +425,7 @@ function onEachFeature(feature, layer) {
 
 //// Create overlay object to hold our overlay layer //////////////////////////////////////////////////////
     var overlayMaps = {
-      Countries: countries,
+      Countries_POP: countries,
       Plates: plates,
       Earthquakes_YTD: earthquakes,
       // Earthquakes2015: earthquakes2015,
