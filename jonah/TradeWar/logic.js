@@ -273,21 +273,21 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&
           color:  "blue", // chooseColor(feature.properties.PlateName), // "white", 
           opacity: .8,
           fillColor: getColorCountry1(colorStyle.properties.gdp_md_est),
-          fillOpacity: 0.6,
+          fillOpacity: 0.8,
           weight: 1,
           // pointerEvents: 'none',
           // zIndex: 650
         }; 
   
         function getColorCountry1(d) {
-          return d > 1000000000 ? '#800026' :
-                 d > 500000000  ? '#BD0026' :
-                 d > 200000000  ? '#E31A1C' :
-                 d > 100000000  ? '#FC4E2A' :
-                 d > 50000000  ? '#FD8D3C' :
-                 d > 20000000   ? '#FEB24C' :
-                 d > 10000000   ? '#FED976' :
-                              '#FFEDA0'
+          return d > 10000000 ? '#006d2c' :
+                 d > 4000000  ? '#2ca25f' :
+                 d > 1000000  ? '#66c2a4' :
+                 d > 200000  ? '#99d8c9' :
+                 d > 700   ? '#ccece6' :
+                              '#edf8fb'
+
+
       } 
       },
     });
@@ -462,7 +462,7 @@ function onEachFeature(feature, layer) {
     var overlayMaps = {
       Countries: countries,
       Plates: plates,
-      Earthquakes: earthquakes,
+      Earthquakes_YTD: earthquakes,
       // Earthquakes2015: earthquakes2015,
       Countries_GDP: countriesGDP,
       CountryMarkers: countryMarkers
