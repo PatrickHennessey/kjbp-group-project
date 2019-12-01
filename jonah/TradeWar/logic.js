@@ -84,14 +84,25 @@ function createFeatures(earthquakeData) {
   return earthquakes
 }
 
+      var conflicts = "TradeWar/data/countries_in_conflict.json";
+      let conflictZones = [];
+      d3.json(conflicts, function(dataC) {
+        conflictZones = dataC.map(dataC => dataC.country);
+        // console.log(conflictZones[0]);
+
+        return conflictZones
+       } );
+      //  console.log(conflictZones[0]);
+
 /// This is the Flag Markers layer  ////////////////////////////////////////////////////////////////////////
 function createFeaturesMarkers(countryMarkersData) {
-  
+
   var countryMarkers = L.geoJSON(countryMarkersData, {
 
   // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
    onEachFeature: function(feature, layer) {
+     
     layer.bindTooltip("<h2>" + "  " + feature.properties.country_name + "  " +
     "<img src='TradeWar/data/Flags/"+`${feature.properties.country}`+".png' alt='TradeWar/data/Flags/NONE.png' style='float:right;clear:both'  height='60' width='60'></img>"+ "</p>" + "<br> " +
 
@@ -105,21 +116,29 @@ function createFeaturesMarkers(countryMarkersData) {
       )},
 
     pointToLayer: function(feature, latlng){
+      
       ///  Hides the poles for NONE flags ///// 
       if ( feature.properties.country === "NONE") {
         var shadow = "TradeWar/data/Flags/NONE.png";
-        console.log(feature.properties.country);
-      } else {
-        var shadow = "TradeWar/data/Flags/shadow.png";
-      }
+        // console.log(feature.properties.country_name[0]);
+        // console.log(conflictZones);
 
+      } else if (conflictZones.includes(feature.properties.country_coords_name)) {
+        
+          var shadow = "TradeWar/data/Flags/shadowFIRE.png";
+      } else {
+          var shadow = "TradeWar/data/Flags/shadow.png";
+      }
+      
       var flag = L.icon({
         shadowUrl: shadow,
         iconUrl: `TradeWar/data/Flags/${feature.properties.country}.png`,
+        // iconUrl: "TradeWar/data/Flags/FIRE.png",
+
         iconSize:     [26, 26], // size of the icon
-        shadowSize:   [64, 64], // size of the shadow
+        shadowSize:   [57, 57], // size of the shadow
         // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        shadowAnchor: [17, 22],  // the same for the shadow
+        shadowAnchor: [17, 31],  // the same for the shadow
         // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
     // console.log(feature.properties.country);
@@ -145,7 +164,7 @@ var date = ytd.toString();
 
 var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime="+
 `${year-1}-${month}-${day}`+"&endtime=" +
-`${year}-${month}-${day}`+"&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=5.0"; 
+`${year}-${month}-${day}`+"&maxlongitude=180&minlongitude=-180&maxlatitude=70&minlatitude=-70&minmagnitude=7.0"; 
     // Perform a GET request to the query URL
   d3.json(queryUrl, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
